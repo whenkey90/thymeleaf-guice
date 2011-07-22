@@ -1,0 +1,14 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Thymeleaf Test Application</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" media="all" href="../../css/default.css" th:href="@{/css/default.css}" />
+</head>
+<body>
+<p th:text="#{index.welcome}">Welcome !</p>
+
+<p>Today is : <span th:text="${today}">:today:</span></p>
+</body>
+</html>
