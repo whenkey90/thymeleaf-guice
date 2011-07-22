@@ -3,30 +3,32 @@ package org.bloatedcode.guice.thymeleaf.module;
 import org.bloatedcode.guice.thymeleaf.module.TemplateEngineModuleBuilder.TemplateResolverParameterBuilder;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
-import com.google.inject.AbstractModule;
+import com.google.inject.servlet.ServletModule;
 
-public class ThymeleafModule extends AbstractModule {
+public class ThymeleafModule extends ServletModule {
 
 	private TemplateEngineModuleBuilder templateEngineBuilder;
 	private ControllerModuleBuilder controllerModuleBuilder;
 
 	@Override
-	protected void configure() {
+	protected void configureServlets() {
 		
 	    templateEngineBuilder = new TemplateEngineModuleBuilder();
 	    controllerModuleBuilder = new ControllerModuleBuilder();
 
 	    
 	    try {
-
+	    	
 	    	configureThymeleaf();
 	        
 	    	install(controllerModuleBuilder);
 	    	install(templateEngineBuilder);
 
 	    }finally {
+	    	
 	    	controllerModuleBuilder = null;
 	    	templateEngineBuilder = null;
+	    	
 	    }
 
 	}
@@ -35,12 +37,13 @@ public class ThymeleafModule extends AbstractModule {
 		
 	}
 	
+	
 	protected TemplateResolverParameterBuilder resolveWith(Class<? extends TemplateResolver> resolver){
 		return templateEngineBuilder.resolveWith(resolver);
 	}
 	
-	protected RequestBindingBuilder serve(String url){
-		return controllerModuleBuilder.serve(url);
+	protected RequestBindingBuilder register(String url){
+		return controllerModuleBuilder.register(url);
 	}
 	
 	public static interface TemplateResolverBuilder {

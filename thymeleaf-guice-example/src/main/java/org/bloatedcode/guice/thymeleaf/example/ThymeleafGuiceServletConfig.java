@@ -10,29 +10,31 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
-import com.google.inject.servlet.ServletModule;
-
 public class ThymeleafGuiceServletConfig extends GuiceServletContextListener  {
 
+	
+	
 	@Override
 	protected Injector getInjector() {
-		return Guice.createInjector(new ServletModule(){
-			@Override
-			protected void configureServlets() {
-				serve("*.html").with(ThymeleafServlet.class);
-			}
-		}, new ThymeleafModule(){
+		
+		final ThymeleafModule thymeleafModule = new ThymeleafModule(){
 			
 			@Override
 			protected void configureThymeleaf() {
+				
+				serve("*.html").with(ThymeleafServlet.class);
+				
 				resolveWith(ServletContextTemplateResolver.class)
 					.using(TemplateMode.XHTML)
 					.prefix("/WEB-INF/templates/")
 					.suffix(".html")
 					.cacheTTLms(3600000L);
 				
-				serve("/index.html").usingTemplate("index").with(IndexController.class,"handleIndex");
+				register("/index.html").usingTemplate("index").with(IndexController.class,"handleIndex");
 			}
-		});
+			
+		};
+		
+		return Guice.createInjector(thymeleafModule);
 	}
 }

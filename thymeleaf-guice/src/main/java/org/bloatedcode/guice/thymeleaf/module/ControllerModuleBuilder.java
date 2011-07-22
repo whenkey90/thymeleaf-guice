@@ -32,7 +32,7 @@ public class ControllerModuleBuilder extends AbstractModule {
 		}
 	}
 
-	public RequestBindingBuilder serve(String url) {
+	public RequestBindingBuilder register(String url) {
 		return new RequestBindingBuilderImpl(url);
 	}
 
