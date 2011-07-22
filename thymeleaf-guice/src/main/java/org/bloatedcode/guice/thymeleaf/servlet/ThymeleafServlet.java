@@ -38,52 +38,51 @@ public class ThymeleafServlet extends HttpServlet {
 	public ThymeleafServlet(Injector injector,TemplateEngine templateEngine,Set<RequestBinding> requestRegistrations) {
 		this.templateEngine = templateEngine;
 		this.injector = injector;
+		logger.info("Registering URLs ...");
 		for (RequestBinding requestBinding : requestRegistrations) {
-			logger.debug("Registering URL '{}' with template '{}' using '{}#{} as the controller.'", new String[]{requestBinding.getUrl(), requestBinding.getTemplate(), requestBinding.getClazz().getName(), requestBinding.getMethodName()});
+			logger.debug(" -->'{}' with template '{}' using '{}#{} as the controller.'", new String[]{requestBinding.getUrl(), requestBinding.getTemplate(), requestBinding.getClazz().getName(), requestBinding.getMethodName()});
 			requestBindingMap.put(requestBinding.getUrl(),requestBinding);
 		}
+		logger.info("Registering URLs ... done.");
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		logger.debug("Receiving GET request to '{}'.", req.getContextPath());
 		doProcess(req, resp);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		logger.debug("Receiving POST request to '{}'.", req.getContextPath());
 		doProcess(req, resp);
 	}
 
 	protected void doProcess(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException {
 		try {
-			logger.debug("Context Path: {}", req.getContextPath());
-			logger.debug("Servlet Path: {}", req.getServletPath());
 
 			String response = null;
 			
 			RequestBinding binding = requestBindingMap.get(req.getServletPath());
 			
 			if(binding == null)
-				throw new ServletException("No bindings for url '" + req.getServletPath() + "'");
+				throw new ServletException("No bindings for url '" + req.getServletPath() + "'.");
 	
 			Object object = injector.getInstance(binding.getClazz());
 			
 		    Class<?> controllerClass = binding.getClazz();
 		    Method method = controllerClass.getMethod(binding.getMethodName(), HttpServletRequest.class, HttpServletResponse.class);
 			
+		    logger.trace("Passing request to '{}#{}'.", new String[]{controllerClass.getName(),method.getName()});
 			IContext context = (IContext) method.invoke(object, req ,resp);
-
+			logger.trace("Passing context to template engine for processing.");
 			response = templateEngine.process(binding.getTemplate(), context);
-			
-			resp.setContentType("text/html;charset=UTF-8");
-			resp.setHeader("Pragma", "no-cache");
-			resp.setHeader("Cache-Control", "no-cache");
-			resp.setDateHeader("Expires", 0);
-
+			logger.trace("Passing processed response to the output writer.");
 			resp.getWriter().write(response);
+			
 		} catch (Exception e) {
 			throw new ServletException(e);
 		}
