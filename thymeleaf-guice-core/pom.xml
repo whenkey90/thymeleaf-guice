@@ -9,7 +9,7 @@
 		<relativePath>..</relativePath>
 	</parent>
 
-	<artifactId>thymeleaf-guice</artifactId>
+	<artifactId>thymeleaf-guice-core</artifactId>
 	<packaging>jar</packaging>
 
 	<dependencies>

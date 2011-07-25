@@ -65,7 +65,7 @@
 	</build>
 
 	<modules>
-		<module>thymeleaf-guice</module>
+		<module>thymeleaf-guice-core</module>
 		<module>thymeleaf-guice-example</module>
 	</modules>
 </project>
