@@ -4,24 +4,29 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.inject.Singleton;
-
 import org.bloatedcode.guice.thymeleaf.RequestBinding;
 import org.bloatedcode.guice.thymeleaf.module.builder.AnnotationRequestMappingBuilder;
 import org.bloatedcode.guice.thymeleaf.module.builder.ControllerMappingBuilder;
 import org.bloatedcode.guice.thymeleaf.module.builder.RequestMappingBuilder;
 import org.bloatedcode.guice.thymeleaf.module.exception.ThymeleafInitializationException;
 import org.bloatedcode.guice.thymeleaf.module.reflect.MethodExtractor;
+import org.bloatedcode.guice.thymeleaf.servlet.ThymeleafServlet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.Multibinder;
 
 public class ControllerModuleBuilder extends AbstractModule {
 
-	public ControllerModuleBuilder() {
+	private final Logger logger = LoggerFactory.getLogger(ControllerModuleBuilder.class);
+	
+	private ThymeleafServlet servlet;
+
+	
+	public ControllerModuleBuilder(ThymeleafServlet servlet) {
+		this.servlet = servlet;
 	}
 	
 	private MethodExtractor extractor = new MethodExtractor();
@@ -36,17 +41,11 @@ public class ControllerModuleBuilder extends AbstractModule {
 	
 	@Override
 	protected void configure() {
-
-		Multibinder<RequestBinding> multibinder = Multibinder.newSetBinder(
-				binder(), RequestBinding.class);
-
-		Set<String> bindedClasses = new HashSet<String>();
+		logger.info("Registering URLs ...");
 		for (RequestBinding binding : requestBindings) {
 			if(exceptions.contains(binding.getMethod()))
-			if (!bindedClasses.contains(binding.getControllerClass().getName())) {
-				bind(binding.getControllerClass()).in(Singleton.class);
-			}
-			multibinder.addBinding().toInstance(binding);
+				continue;
+			servlet.register(binding);
 		}
 	}
 

@@ -1,15 +1,13 @@
 package org.bloatedcode.guice.thymeleaf.module;
 
 import java.lang.reflect.Method;
-import java.math.MathContext;
 
 import org.bloatedcode.guice.thymeleaf.module.ControllerModuleBuilder.ControllerMappingBuilderImpl;
-import org.bloatedcode.guice.thymeleaf.module.ControllerModuleBuilder.RequestMappingBuilderImpl;
-import org.bloatedcode.guice.thymeleaf.module.builder.RequestMappingBuilder;
 import org.bloatedcode.guice.thymeleaf.module.controller.TestController;
 import org.bloatedcode.guice.thymeleaf.module.exception.ThymeleafInitializationException;
+import org.bloatedcode.guice.thymeleaf.servlet.ThymeleafServlet;
+import org.easymock.EasyMock;
 
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,8 +21,10 @@ public class ControllerMappingBuilderImplTest {
 	
 	private Class<?> controllerClass = TestController.class;
 	
+	private ThymeleafServlet servlet = EasyMock.createMock(ThymeleafServlet.class);
+	
 	private ControllerMappingBuilderImpl builder;
-	private ControllerModuleBuilder moduleBuilder = new ControllerModuleBuilder();
+	private ControllerModuleBuilder moduleBuilder = new ControllerModuleBuilder(servlet);
 	
 	@Before
 	public void setup() throws Exception{

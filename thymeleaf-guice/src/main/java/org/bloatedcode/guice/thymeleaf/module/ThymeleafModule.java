@@ -2,7 +2,6 @@ package org.bloatedcode.guice.thymeleaf.module;
 
 
 import org.bloatedcode.guice.thymeleaf.module.builder.ControllerMappingBuilder;
-import org.bloatedcode.guice.thymeleaf.module.builder.RequestMappingBuilder;
 import org.bloatedcode.guice.thymeleaf.module.builder.TemplateResolverParameterBuilder;
 import org.bloatedcode.guice.thymeleaf.servlet.ThymeleafServlet;
 import org.thymeleaf.templateresolver.TemplateResolver;
@@ -17,25 +16,35 @@ public class ThymeleafModule extends AbstractModule {
 	private ControllerModuleBuilder controllerModuleBuilder;
 	private ServletModule servletModule;
 
+	
+	private ThymeleafServlet servlet;
 	private String urlPattern;
 	private String[] morePatterns;
 	
 	@Override
 	protected final void configure() {
+		
+		servlet = new ThymeleafServlet();
+		
+
+		
+		bind(ThymeleafServlet.class).toInstance(servlet);
 
 		templateEngineBuilder = new TemplateEngineModuleBuilder();
-		controllerModuleBuilder = new ControllerModuleBuilder();
+		controllerModuleBuilder = new ControllerModuleBuilder(servlet);
 		
 		servletModule = new ServletModule() {
 			@Override
 			protected void configureServlets() {
 				Preconditions.checkState(urlPattern != null, "There must be at least one pattern configured with 'ThymeleafModule#serve'");
-				serve(urlPattern, morePatterns).with(ThymeleafServlet.class);
+				serve(urlPattern, morePatterns).with(servlet);
 			}
 		};
 
 		try {
-
+			
+			
+			
 			configureThymeleaf();
 
 			install(servletModule);

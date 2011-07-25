@@ -33,18 +33,29 @@ public class ThymeleafServlet extends HttpServlet {
 
 	private Map<String,RequestBinding> requestBindingMap = new HashMap<String, RequestBinding>();
 	private Injector injector;
-
+	public ThymeleafServlet() {}
+	
 	@Inject
-	public ThymeleafServlet(Injector injector,TemplateEngine templateEngine,Set<RequestBinding> requestRegistrations) {
-		this.templateEngine = templateEngine;
+	public void setInjector(Injector injector) {
 		this.injector = injector;
-		logger.info("Registering URLs ...");
-		for (RequestBinding requestBinding : requestRegistrations) {
-			logger.info(" -->'{}' with template '{}' using '{}#{} as the controller.'", new String[]{requestBinding.getUrl(), requestBinding.getTemplate(), requestBinding.getControllerClass().getName(), requestBinding.getMethod().getName()});
-			requestBindingMap.put(requestBinding.getUrl(),requestBinding);
-		}
-		logger.info("Registering URLs ... done.");
 	}
+	
+	@Inject
+	public void setTemplateEngine(TemplateEngine templateEngine) {
+		this.templateEngine = templateEngine;
+	}
+	
+	public void register(RequestBinding binding){
+		logger.info(" -->'{}' with template '{}' using '{}#{} as the controller.'", new String[]{binding.getUrl(), binding.getTemplate(), binding.getControllerClass().getName(), binding.getMethod().getName()});
+		requestBindingMap.put(binding.getUrl(),binding);
+	}
+	
+	public void register(Set<RequestBinding> bindings){
+		for (RequestBinding binding : bindings) {
+			register(binding);
+		}
+	}
+	
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
