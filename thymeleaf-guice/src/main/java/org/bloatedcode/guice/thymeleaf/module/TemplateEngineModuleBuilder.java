@@ -1,5 +1,6 @@
 package org.bloatedcode.guice.thymeleaf.module;
 
+import org.bloatedcode.guice.thymeleaf.module.builder.TemplateResolverParameterBuilder;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.TemplateMode;
 import org.thymeleaf.templateresolver.TemplateResolver;
@@ -54,18 +55,6 @@ class TemplateEngineModuleBuilder extends AbstractModule {
 			Class<? extends TemplateResolver> resolver) {
 		this.resolverClass = resolver;
 		return new TemplateResolverParameterBuilderImpl();
-	}
-
-	public static interface TemplateResolverParameterBuilder {
-
-		TemplateResolverParameterBuilder using(TemplateMode mode);
-
-		TemplateResolverParameterBuilder cacheTTLms(long cache);
-
-		TemplateResolverParameterBuilder suffix(String suffix);
-
-		TemplateResolverParameterBuilder prefix(String prefix);
-
 	}
 
 	class TemplateResolverParameterBuilderImpl implements

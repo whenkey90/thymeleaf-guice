@@ -1,34 +1,36 @@
 package org.bloatedcode.guice.thymeleaf;
 
+import java.lang.reflect.Method;
+
 
 public class RequestBinding {
 
-	private String methodName;
-	private Class<?> clazz;
+	private Method method;
+	private Class<?> controllerClass;
 	private String template;
 	private String url;
 	
-	public RequestBinding(Class<?> controllerClass, String template, String methodName, String url) {
-		this.clazz = controllerClass;
+	public RequestBinding(Class<?> controllerClass,Method method, String template, String url) {
+		this.controllerClass = controllerClass;
+		this.method = method;
 		this.template = template;
-		this.methodName = methodName;
 		this.url = url;
 	}
 
-	public Class<?> getClazz() {
-		return clazz;
+	public Class<?> getControllerClass() {
+		return controllerClass;
 	}
 
+	public Method getMethod() {
+		return method;
+	}
+	
 	public String getUrl() {
 		return url;
 	}
 
 	public String getTemplate() {
 		return template;
-	}
-
-	public String getMethodName() {
-		return methodName;
 	}
 
 }

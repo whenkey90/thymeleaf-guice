@@ -40,7 +40,7 @@ public class ThymeleafServlet extends HttpServlet {
 		this.injector = injector;
 		logger.info("Registering URLs ...");
 		for (RequestBinding requestBinding : requestRegistrations) {
-			logger.debug(" -->'{}' with template '{}' using '{}#{} as the controller.'", new String[]{requestBinding.getUrl(), requestBinding.getTemplate(), requestBinding.getClazz().getName(), requestBinding.getMethodName()});
+			logger.info(" -->'{}' with template '{}' using '{}#{} as the controller.'", new String[]{requestBinding.getUrl(), requestBinding.getTemplate(), requestBinding.getControllerClass().getName(), requestBinding.getMethod().getName()});
 			requestBindingMap.put(requestBinding.getUrl(),requestBinding);
 		}
 		logger.info("Registering URLs ... done.");
@@ -71,12 +71,11 @@ public class ThymeleafServlet extends HttpServlet {
 			if(binding == null)
 				throw new ServletException("No bindings for url '" + req.getServletPath() + "'.");
 	
-			Object object = injector.getInstance(binding.getClazz());
+			Object object = injector.getInstance(binding.getControllerClass());
 			
-		    Class<?> controllerClass = binding.getClazz();
-		    Method method = controllerClass.getMethod(binding.getMethodName(), HttpServletRequest.class, HttpServletResponse.class);
+			Method method  = binding.getMethod();
 			
-		    logger.trace("Passing request to '{}#{}'.", new String[]{controllerClass.getName(),method.getName()});
+		    logger.trace("Passing request to '{}#{}'.", new String[]{binding.getControllerClass().getName(),method.getName()});
 			IContext context = (IContext) method.invoke(object, req ,resp);
 			logger.trace("Passing context to template engine for processing.");
 			response = templateEngine.process(binding.getTemplate(), context);
