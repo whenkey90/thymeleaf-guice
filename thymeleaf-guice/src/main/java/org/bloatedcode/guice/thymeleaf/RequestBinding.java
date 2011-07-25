@@ -33,4 +33,13 @@ public class RequestBinding {
 		return template;
 	}
 
+	
+	@Override
+	public String toString() {
+		return new StringBuilder("{")
+			.append("controllerClass: <").append(controllerClass.toString()).append(">, ")
+			.append("method: <").append(method.toString()).append(">, ")
+			.append("template: ").append(template).append(", ")
+			.append("url: ").append(url).append("}").toString();
+	}
 }

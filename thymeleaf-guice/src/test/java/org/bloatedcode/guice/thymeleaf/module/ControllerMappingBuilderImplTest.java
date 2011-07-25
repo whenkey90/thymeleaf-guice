@@ -106,6 +106,11 @@ public class ControllerMappingBuilderImplTest {
 		builder.method("unknownMethod");
 	}
 	
+	@Test(expected=ThymeleafInitializationException.class)
+	public void testModuleUnknownMethodWithParameters() throws Exception {
+		builder.method("unknownMethod", String.class );
+	}
+	
 	@Test
 	public void testModuleNonUniqueExistingMethodWithParams() throws Exception {
 		builder.method("overloadedMethod", new Class<?>[]{});

@@ -14,9 +14,10 @@ import org.bloatedcode.guice.thymeleaf.servlet.ThymeleafServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.inject.AbstractModule;
+
+import static com.google.common.base.Preconditions.*;
 
 public class ControllerModuleBuilder extends AbstractModule {
 
@@ -32,6 +33,10 @@ public class ControllerModuleBuilder extends AbstractModule {
 	private MethodExtractor extractor = new MethodExtractor();
 
 	private Set<RequestBinding> requestBindings = new HashSet<RequestBinding>();
+	
+	public Set<RequestBinding> getRequestBindings() {
+		return requestBindings;
+	}
 
 	private Set<Method> exceptions = new HashSet<Method>();
 	
@@ -75,14 +80,15 @@ public class ControllerModuleBuilder extends AbstractModule {
 		
 		@Override
 		public void to(String url) {
-			Preconditions.checkArgument(!Strings.isNullOrEmpty(url),"The url must not be null or empty");
-			Preconditions.checkState(template != null,"The template must be specified with RequestMappingBuilder#using(String)");
+			checkArgument(!Strings.isNullOrEmpty(url),"The url must not be null or empty");
+			checkState(template != null,"The template must be specified with RequestMappingBuilder#using(String)");
 			
 			requestBindings.add(new RequestBinding(controllerClass, method, template,url));
 		}
 
 		@Override
 		public RequestMappingBuilder using(String template) {
+			checkArgument(!Strings.isNullOrEmpty(template),"The template must not be null or empty");
 			this.template = template;
 			return this;
 		}
@@ -112,8 +118,9 @@ public class ControllerModuleBuilder extends AbstractModule {
 			return new RequestMappingBuilderImpl(controllerClass,method);
 		}
 
+		@Override
 		public RequestMappingBuilder method(String methodName,
-				Class<?>[] parameters) {
+				Class<?> ... parameters) {
 			method = extractor.findMethod(methodName, controllerClass, parameters);
 			return new RequestMappingBuilderImpl(controllerClass,method);
 		}
@@ -133,7 +140,7 @@ public class ControllerModuleBuilder extends AbstractModule {
 
 		@Override
 		public ControllerMappingBuilder except(String[] methods,
-				Class<?>[][] parameters) {
+				Class<?>[] ... parameters) {
 			for (int i = 0; i < methods.length; i++) {
 				except(methods[i], parameters[i]);
 			}
@@ -142,7 +149,7 @@ public class ControllerModuleBuilder extends AbstractModule {
 
 		@Override
 		public ControllerMappingBuilder except(String methodName,
-				Class<?>[] parameters) {
+				Class<?> ... parameters) {
 			Method method = extractor.findMethod(methodName, controllerClass, parameters);
 			if(exceptions.contains(method)){
 				throw new ThymeleafInitializationException(
