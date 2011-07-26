@@ -5,12 +5,8 @@ import java.lang.reflect.Method;
 import org.bloatedcode.guice.thymeleaf.RequestBinding;
 import org.bloatedcode.guice.thymeleaf.module.ControllerModuleBuilder.RequestMappingBuilderImpl;
 import org.bloatedcode.guice.thymeleaf.module.controller.TestController;
-import org.bloatedcode.guice.thymeleaf.module.exception.ThymeleafInitializationException;
 import org.bloatedcode.guice.thymeleaf.servlet.ThymeleafServlet;
 import org.easymock.EasyMock;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +46,7 @@ public class RequestMappingBuilderImplTest {
 	}
 	
 	
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testBindOverloadedMethod() throws Exception {
 		Method overloadedMethod = controllerClass.getMethod("overloadedMethod", String.class);
@@ -62,6 +59,9 @@ public class RequestMappingBuilderImplTest {
 		
 		assertThat(moduleBuilder.getRequestBindings(), hasSize(1));
 		assertThat(moduleBuilder.getRequestBindings(), contains(samePropertyValuesAs(expected)));
+		
+		assertThat(builder.getMethod(), is(overloadedMethod));
+		assertThat((Class) builder.getControllerClass(), equalTo((Class) controllerClass));
 	}
 	
 	@Test(expected=IllegalStateException.class)

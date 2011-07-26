@@ -35,6 +35,10 @@ public class ThymeleafServlet extends HttpServlet {
 	private Injector injector;
 	public ThymeleafServlet() {}
 	
+	public Map<String, RequestBinding> getRequestBindingMap() {
+		return requestBindingMap;
+	}
+	
 	@Inject
 	public void setInjector(Injector injector) {
 		this.injector = injector;

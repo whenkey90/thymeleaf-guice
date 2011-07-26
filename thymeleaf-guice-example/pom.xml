@@ -24,7 +24,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.bloatedcode.guice.thymeleaf</groupId>
-			<artifactId>thymeleaf-guice</artifactId>
+			<artifactId>thymeleaf-guice-core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

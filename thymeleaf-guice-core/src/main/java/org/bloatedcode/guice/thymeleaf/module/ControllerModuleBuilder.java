@@ -2,6 +2,7 @@ package org.bloatedcode.guice.thymeleaf.module;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.bloatedcode.guice.thymeleaf.RequestBinding;
@@ -32,7 +33,7 @@ public class ControllerModuleBuilder extends AbstractModule {
 	
 	private MethodExtractor extractor = new MethodExtractor();
 
-	private Set<RequestBinding> requestBindings = new HashSet<RequestBinding>();
+	private Set<RequestBinding> requestBindings = new LinkedHashSet<RequestBinding>();
 	
 	public Set<RequestBinding> getRequestBindings() {
 		return requestBindings;
@@ -48,8 +49,11 @@ public class ControllerModuleBuilder extends AbstractModule {
 	protected void configure() {
 		logger.info("Registering URLs ...");
 		for (RequestBinding binding : requestBindings) {
-			if(exceptions.contains(binding.getMethod()))
+			Method method = binding.getMethod();
+			if(exceptions.contains(method)){
+				logger.debug("Ignoring method: {}",method );
 				continue;
+			}
 			servlet.register(binding);
 		}
 	}

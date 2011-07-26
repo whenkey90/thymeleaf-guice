@@ -6,7 +6,6 @@ import org.bloatedcode.guice.thymeleaf.module.ControllerModuleBuilder.Controller
 import org.bloatedcode.guice.thymeleaf.module.controller.TestController;
 import org.bloatedcode.guice.thymeleaf.module.exception.ThymeleafInitializationException;
 import org.bloatedcode.guice.thymeleaf.servlet.ThymeleafServlet;
-import org.easymock.EasyMock;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,10 +20,10 @@ public class ControllerMappingBuilderImplTest {
 	
 	private Class<?> controllerClass = TestController.class;
 	
-	private ThymeleafServlet servlet = EasyMock.createMock(ThymeleafServlet.class);
+
 	
 	private ControllerMappingBuilderImpl builder;
-	private ControllerModuleBuilder moduleBuilder = new ControllerModuleBuilder(servlet);
+	private ControllerModuleBuilder moduleBuilder = new ControllerModuleBuilder(new ThymeleafServlet());
 	
 	@Before
 	public void setup() throws Exception{
@@ -87,6 +86,7 @@ public class ControllerMappingBuilderImplTest {
 		builder.except(new String[]{"overloadedMethod","singleMethod","overloadedMethod",},new Class<?>[][]{{},{},{}});
 	}
 	
+	@SuppressWarnings({"rawtypes" })
 	@Test
 	public void textMethodUniqueExistingMethod()throws Exception{
 		builder.method("singleMethod");
@@ -94,6 +94,7 @@ public class ControllerMappingBuilderImplTest {
 		Method singleMethod = controllerClass.getMethod("singleMethod");
 		
 		assertThat(builder.getMethod(),  is(singleMethod));
+		assertThat((Class) builder.getControllerClass(), equalTo((Class) controllerClass));
 	}
 	
 	@Test(expected=ThymeleafInitializationException.class)
