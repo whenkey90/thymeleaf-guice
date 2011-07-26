@@ -1,7 +1,6 @@
 package org.bloatedcode.guice.thymeleaf.example;
 
 
-import org.bloatedcode.guice.thymeleaf.example.controller.AnnotatedController;
 import org.bloatedcode.guice.thymeleaf.example.controller.IndexController;
 import org.bloatedcode.guice.thymeleaf.module.ThymeleafModule;
 import org.thymeleaf.TemplateMode;
@@ -26,10 +25,10 @@ public class ThymeleafGuiceServletConfig extends GuiceServletContextListener  {
 				
 				// Configure the remplate resolver
 				resolveWith(ServletContextTemplateResolver.class)
-					.using(TemplateMode.XHTML)
+					.encoding("UTF-8")
 					.prefix("/WEB-INF/templates/")
 					.suffix(".html")
-					.cacheTTLms(3600000L);
+					.mode(TemplateMode.XHTML);
 				
 				// Register specific method
 				register(IndexController.class).method("handleIndex").using("index").to("/index.html");

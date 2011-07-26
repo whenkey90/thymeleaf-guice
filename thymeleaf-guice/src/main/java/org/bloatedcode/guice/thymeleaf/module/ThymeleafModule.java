@@ -4,6 +4,8 @@ package org.bloatedcode.guice.thymeleaf.module;
 import org.bloatedcode.guice.thymeleaf.module.builder.ControllerMappingBuilder;
 import org.bloatedcode.guice.thymeleaf.module.builder.TemplateResolverParameterBuilder;
 import org.bloatedcode.guice.thymeleaf.servlet.ThymeleafServlet;
+import org.thymeleaf.TemplateMode;
+import org.thymeleaf.templateresolver.ITemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
 import com.google.common.base.Preconditions;
@@ -43,8 +45,6 @@ public class ThymeleafModule extends AbstractModule {
 
 		try {
 			
-			
-			
 			configureThymeleaf();
 
 			install(servletModule);
@@ -73,9 +73,12 @@ public class ThymeleafModule extends AbstractModule {
 		
 	}
 
-	protected TemplateResolverParameterBuilder resolveWith(
-			Class<? extends TemplateResolver> resolver) {
+	protected TemplateResolverParameterBuilder resolveWith(Class<? extends TemplateResolver> resolver) {
 		return templateEngineBuilder.resolveWith(resolver);
+	}
+	
+	protected void resolveWith(ITemplateResolver resolver){
+		templateEngineBuilder.resolveWith(resolver);
 	}
 
 	protected ControllerMappingBuilder register(Class<?> controllerClass) {
