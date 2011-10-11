@@ -16,6 +16,10 @@ import com.google.inject.AbstractModule;
 class TemplateEngineModuleBuilder extends AbstractModule {
 
 	private ITemplateResolver resolver = null;
+	
+	public ITemplateResolver getResolver() {
+		return resolver;
+	}
 
 	@Override
 	protected void configure() {
@@ -50,7 +54,7 @@ class TemplateEngineModuleBuilder extends AbstractModule {
 
 		public TemplateResolverParameterBuilderImpl(Class<? extends TemplateResolver> resolverClass) {
 			try {
-				resolver = resolverClass.newInstance();
+				resolver = resolverClass.newInstance(); 
 			} catch (Exception e) {
 				throw new RuntimeException("Could not create new TemplateResolver object.", e);
 			}

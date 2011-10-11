@@ -4,7 +4,6 @@ package org.bloatedcode.guice.thymeleaf.module;
 import org.bloatedcode.guice.thymeleaf.module.builder.ControllerMappingBuilder;
 import org.bloatedcode.guice.thymeleaf.module.builder.TemplateResolverParameterBuilder;
 import org.bloatedcode.guice.thymeleaf.servlet.ThymeleafServlet;
-import org.thymeleaf.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 

@@ -1,11 +1,15 @@
 package org.bloatedcode.guice.thymeleaf.module;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.bloatedcode.guice.thymeleaf.RequestBinding;
+import org.bloatedcode.guice.thymeleaf.module.annotation.RequestBindingHandler;
 import org.bloatedcode.guice.thymeleaf.module.builder.AnnotationRequestMappingBuilder;
 import org.bloatedcode.guice.thymeleaf.module.builder.ControllerMappingBuilder;
 import org.bloatedcode.guice.thymeleaf.module.builder.RequestMappingBuilder;
@@ -131,7 +135,12 @@ public class ControllerModuleBuilder extends AbstractModule {
 
 		@Override
 		public AnnotationRequestMappingBuilder byAnnotation() {
-			 throw new RuntimeException("Not implemented");
+			List<Method> methods = extractor.findAnnotatedMethods(controllerClass);
+			for (Method method : methods) {
+				RequestBindingHandler handler = method.getAnnotation(RequestBindingHandler.class);
+				new RequestMappingBuilderImpl(controllerClass, method).using(handler.template()).to(handler.value());
+			}
+			return new AnnotationRequestMappingBuilderImpl(methods);
 		}
 
 		@Override
@@ -163,6 +172,30 @@ public class ControllerModuleBuilder extends AbstractModule {
 			return this;
 		}
 
+	}
+	
+	class AnnotationRequestMappingBuilderImpl implements AnnotationRequestMappingBuilder {
+
+		private List<Method> methods;
+
+		public AnnotationRequestMappingBuilderImpl(List<Method> methods) {
+			this.methods = methods;
+		}
+		
+		@Override
+		public void except(String method, String... otherMethods) {
+			List<String> methodExceptions = new LinkedList<String>();
+			methodExceptions.add(method);
+			methodExceptions.addAll(Arrays.asList(otherMethods));
+			
+			for (String exception : methodExceptions) {
+				for (Method currentMethod : methods) {
+					if(currentMethod.getName().equals(exception))
+						exceptions.add(currentMethod);
+				}
+			}
+		}
+		
 	}
 
 	

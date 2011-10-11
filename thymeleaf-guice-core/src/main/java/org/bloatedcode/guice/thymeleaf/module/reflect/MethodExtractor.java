@@ -1,7 +1,11 @@
 package org.bloatedcode.guice.thymeleaf.module.reflect;
 
 import java.lang.reflect.Method;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
+import org.bloatedcode.guice.thymeleaf.module.annotation.RequestBindingHandler;
 import org.bloatedcode.guice.thymeleaf.module.exception.ThymeleafInitializationException;
 
 public class MethodExtractor {
@@ -41,5 +45,18 @@ public class MethodExtractor {
 							+ "'", e);
 		}
 		return findMethod;
+	}
+	
+	public List<Method> findAnnotatedMethods(Class<?> clazz){
+		List<Method> annotatedMethods = new LinkedList<Method>();
+		
+		Method[] methods = clazz.getMethods();
+		for (Method method : methods) {
+			if(method.isAnnotationPresent(RequestBindingHandler.class)){
+				annotatedMethods.add(method);
+			}
+		}
+		
+		return annotatedMethods;
 	}
 }
