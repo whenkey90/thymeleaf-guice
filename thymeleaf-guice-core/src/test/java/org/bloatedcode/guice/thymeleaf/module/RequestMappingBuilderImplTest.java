@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 public class RequestMappingBuilderImplTest {
 
 	private Class<?> controllerClass = TestController.class;
-	
+		
 	private ThymeleafServlet servlet = EasyMock.createMock(ThymeleafServlet.class);
 	
 	private RequestMappingBuilderImpl builder;
@@ -90,6 +90,7 @@ public class RequestMappingBuilderImplTest {
 		
 		builder.using("index").to("");
 	}
+
 	
 	private static class ControllerModuleBuilderTester extends ControllerModuleBuilder {
 		public ControllerModuleBuilderTester(ThymeleafServlet servlet) {
@@ -100,4 +101,5 @@ public class RequestMappingBuilderImplTest {
 			return new RequestMappingBuilderImpl(controllerClass, method);
 		}
 	}
+	
 }

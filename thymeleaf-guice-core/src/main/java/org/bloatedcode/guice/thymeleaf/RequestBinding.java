@@ -2,6 +2,8 @@ package org.bloatedcode.guice.thymeleaf;
 
 import java.lang.reflect.Method;
 
+import com.google.common.base.Objects;
+
 
 public class RequestBinding {
 
@@ -42,4 +44,5 @@ public class RequestBinding {
 			.append("template: ").append(template).append(", ")
 			.append("url: ").append(url).append("}").toString();
 	}
+	
 }
